@@ -1,31 +1,54 @@
-Historia de usuario 
+# História de Usuário — Reserva de Horário
 
-Como usuário do sistema de reservas da ASCJJA,
-quero me autenticar, visualizar opções de locais disponíveis e selecionar um horário,
+## Descrição
+Como usuário do sistema de reservas da ASCJJA,  
+quero me autenticar, visualizar opções de locais disponíveis e selecionar um horário,  
 para que eu possa realizar uma reserva de forma rápida e organizada.
 
-Contexto funcional (leitura estratégica do que você mostrou)
-Você não tem apenas uma tela — você tem um fluxo transacional completo. Isso significa que essa história pode ser tratada como uma “epic leve” ou uma user story expandida com múltiplos estados.
+---
 
-Critérios de Aceite (nível que um dev/pleno deveria conseguir implementar sem ambiguidade)
+## Critérios de Aceite
 
-O usuário deve conseguir acessar o sistema via login com credenciais válidas.
-Caso não possua conta, deve conseguir realizar cadastro informando nome, e-mail e senha.
-Após autenticado, o sistema deve apresentar opções de locais disponíveis com imagem e identificação.
-Ao selecionar um local, o sistema deve exibir uma grade de horários disponíveis.
-Os horários disponíveis devem ser visualmente diferenciados dos indisponíveis.
-O usuário deve conseguir selecionar um ou mais horários válidos.
-Ao confirmar, a reserva deve ser registrada e refletir indisponibilidade para outros usuários.
-O sistema deve fornecer feedback claro de sucesso ou erro na reserva.
+- O usuário deve conseguir acessar o sistema via login com credenciais válidas.
+- Caso não possua conta, deve conseguir realizar cadastro informando nome, e-mail e senha.
+- Após autenticado, o sistema deve apresentar opções de locais disponíveis com imagem e identificação.
+- Ao selecionar um local, o sistema deve exibir uma grade de horários disponíveis.
+- Os horários disponíveis devem ser visualmente diferenciados dos indisponíveis.
+- O usuário deve conseguir selecionar um ou mais horários válidos.
+- Ao confirmar, a reserva deve ser registrada no sistema.
+- Horários já reservados devem se tornar indisponíveis para outros usuários.
+- O sistema deve fornecer feedback claro de sucesso ou erro na reserva.
 
-Leitura crítica (o que você provavelmente não considerou ainda)
+---
 
-Essa UI sugere um sistema simples, mas na prática isso é um problema clássico de concorrência (race condition). Se dois usuários selecionam o mesmo horário ao mesmo tempo, você precisa de:
+## Regras de Negócio
 
-lock otimista (verificação no commit)
+- Um horário não pode ser reservado por mais de um usuário simultaneamente.
+- Apenas usuários autenticados podem realizar reservas.
+- Horários indisponíveis não podem ser selecionados.
+Historia do usuario 
+- O sistema deve garantir consistência em casos de concorrência (ex: dois usuários tentando reservar o mesmo horário).
 
-ou lock pessimista (reservar temporariamente o slot)
+---
 
-Sem isso, sua UX quebra silenciosamente.
+## Considerações Técnicas
 
-Outro ponto: a grid de horários indica um modelo de dados baseado em slots discretos. Isso limita flexibilidade futura (ex: reservas com duração variável). Se isso puder evoluir, talvez valha modelar como intervalos de tempo ao invés de slots fixos.
+- Implementar controle de concorrência (lock otimista ou pessimista).
+- Estrutura de horários baseada em slots (avaliar possibilidade de evolução para intervalos dinâmicos).
+- Garantir atualização em tempo real ou validação no momento da confirmação.
+
+---
+
+## Possível Quebra (Refinamento)
+
+### 1. Autenticação
+- Login de usuário
+- Cadastro de usuário
+
+### 2. Exploração
+- Listagem de locais disponíveis
+- Visualização de detalhes
+
+### 3. Reserva
+- Seleção de horários
+- Confirmação de reserva
